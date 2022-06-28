@@ -35,7 +35,7 @@ const reducer = (state, action) =>{
 
 
 export function provideContext(props) {
-    const[state, dispatch] = React.userReducer(reducer, initialState)
+    const[state, handle] = React.userReducer(reducer, initialState)
     const actions = useActions(state, handle);
     const value = {state, handle, actions};
 

@@ -11,10 +11,10 @@ export const useActions = (state, handle)  => {
         });
     };
 
-    const Login = (auth) => {
+    const Authenticate= (auth) => {
         let authAccount= state.users.find(user => user.email === auth.email &&
             user.password === auth.password )
-       //if authentication is succcess handle it, otherwise provide a message
+       //if authentication is success handle it, otherwise provide a message
         if (authAccount) {
             handle({
                 type: "LOGIN",
@@ -30,14 +30,7 @@ export const useActions = (state, handle)  => {
 //Create a New Account
 //Login
 
-
-
-
 return {
     addAccount,
-    login,
-    setSuccess,
-    setError,
-    withdraw,
-    deposit
+    Authenticate
 }
