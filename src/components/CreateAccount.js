@@ -1,45 +1,77 @@
-import {useContext, useState} from 'react';
-import {Context} from "../Context/Context";
+import React from 'react';
+import UserContext from './UserContext';
+import Card from './Card';
 
-//TODO: need to link the visual components
-
-import {useFormik} from 'formik';
-
-export default function CreateAccount() {
-    const {actions} = useContext(Context)
-    const [display, setDisplay] = useState(true);
-
-    //Form validation
-    const formik = useFormik({
-        initialValues:
-            {
-                name: "",
-                email: "",
-                password: ""
-            },
-
-        onSubmit: values => {
-            console.log(values);
-            setDisplay(true);
-            alert("Congratulations, the account has been registered!!!")
-            actions.addAccount({...values, balance: 0});
-        },
-        onReset: values => {
-            setDisplay(true);
-        },
-        validate: values => {
-            let errors = {};
-            if (!values.name) errors.name = "Field Required";
-            if (!values.email) errors.email = "Field required";
-            if (!values.password) errors.password = "Field required";
-            if (values.password.length < 8) errors.password = "Password must be at least 8 characters long"
-            if (!/^[\w+\d+._+-]+@[\w+\d+-]+\.[\w]{2,4}$/i.test(values.email)) errors.email = "Invalid Email";
-            return errors;
+function CreateAccount(){
+    const [show, setShow]         = React.useState(true);
+    const [status, setStatus]     = React.useState('');
+    const [name, setName]         = React.useState('');
+    const [email, setEmail]       = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const ctx = React.useContext(UserContext);  
+  
+    function validate(field, label){
+        if (!field) {
+          setStatus('Error: please enter ' + label);
+          setTimeout(() => setStatus(''),3000);
+          return false;
         }
-    })
+        return true;
+    }
+   
+    function validatePassword(field){
+      if (password.length < 8) {
+          setStatus('Error: Password must be more than 8 characters');
+          setTimeout(() => setStatus(''),3000);
+          return false;
+      }
+      return true;
+      }  
+        
+    function handleCreate(){
+      if(!validatePassword(password)) {
+        alert('Password must be more than 8 characters');
+        return;
+      }
 
-
+      console.log(name,email,password);
+      if (!validate(name,     'name'))     return;
+      if (!validate(email,    'email'))    return;
+      if (!validate(password, 'password')) return;
+      ctx.users.push({name,email,password,balance:100});
+      setShow(false);
+    }    
+  
+    function clearForm(){
+      setName('');
+      setEmail('');
+      setPassword('');
+      setShow(true);
+    }
+  
     return (
-        <></>
+      <Card
+        bgcolor="primary"
+        header="BadBank Create Account"
+        status={status}
+        body={show ? (  
+                <>
+                Name<br/>
+                <input type="input" className="form-control" id="name" placeholder="Enter name" value={name} onChange={e => setName(e.currentTarget.value)} /><br/>
+                Email address<br/>
+                <input type="input" className="form-control" id="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.currentTarget.value)}/><br/>
+                Password<br/>
+                <input type="password" className="form-control" id="password" placeholder="Enter password" value={password} onChange={e => setPassword(e.currentTarget.value)}/><br/>
+                <button type="submit" className="btn btn-light" disabled={name+password+email ===""} onClick={handleCreate}>Create Account</button>
+                </>
+              ):(
+                <>
+                <h5>Success! You've created a new account.</h5>
+                <button type="submit" className="btn btn-light" onClick={clearForm}>Add another account</button>
+                </>
+              )}
+      />
     )
-}
+  }
+
+  export default CreateAccount;

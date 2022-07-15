@@ -1,28 +1,19 @@
-import {Context} from "../Context/Context";
-import {useContext} from 'react';
+import React from 'react';
+import UserContext from './UserContext';
+import Card from './Card';
+import bank from '../assets/bank.png';
 
-export default function AllData() {
-    const {state} = useContext(Context) //TODO:look deeper into useContext
+function Home(){
+    const ctx = React.useContext(UserContext);  
     return (
-        <table className="table">
-            <thead>
-            <tr>
-                <th scope="col">Email</th>
-                <th scope="col">Name</th>
-                <th scope="col">Password</th>
-                <th scope="col">Balance</th>
-            </tr>
-            </thead>
-            <tbody>
-            {state.users.map(element=> {
-                return <tr>
-                    <td>{element.email}</td>
-                    <td>{element.name}</td>
-                    <td>{element.password}</td>
-                    <td>{element.balance}</td>
-                </tr>
-            })}
-            </tbody>
-        </table>
-    )
-}
+        <Card
+        bgcolor="primary"
+        txtcolor="white"
+        header="BadBank"
+        title="Welcome to BadBank"
+        text="Thank you for choosing BadBank!"
+        body={(<img src={bank} className="img-fluid" alt="Responsive image"/>)}
+      />    
+    );  
+  }
+  export default Home;

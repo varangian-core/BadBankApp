@@ -26,18 +26,24 @@ const initialState = {
 }
 
 const reducer = (state, action) =>{
-        if (action.type == "ADD_ACCOUNT"){
+        if (action.type === "ADD_ACCOUNT"){
             return {...state, newAccounts: action.payload}
         } else if (action.type === "LOGIN"){
             return {...state, authAccount: action.payload}
+        } else if (action.type === "UPDATE_USER_BALANCE" ) {
+            return {...state, users: action.payload}
+        } else if (action.type === "SUCCESS"){
+            return {...state, success: action.payload}
+        } else if (action.type === "ERROR") {
+            return {...state, error: action.payload}
         }
 }
 
 
-export function provideContext(props) {
-    const[state, handle] = React.userReducer(reducer, initialState)
+export function ProvideContext(props) {
+    const[state, handle] = React.useReducer(reducer, initialState)
     const actions = useActions(state, handle);
     const value = {state, handle, actions};
 
-    return<Context.provideContext value={value}> {props.children} </Context.provideContext>;
+    return<Context.Provider value={value}> {props.children} </Context.Provider>
 }
